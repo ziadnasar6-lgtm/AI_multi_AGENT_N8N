@@ -1,0 +1,1100 @@
+{
+  "name": "AI_SMART_Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1408,
+        -480
+      ],
+      "id": "5fbd107c-f29d-4449-bd24-993280573f8b",
+      "name": "Telegram Trigger",
+      "webhookId": "2b60881e-3196-48ab-8cdd-3f197a11bfa8",
+      "credentials": {
+        "telegramApi": {
+          "id": "ram03ZMENj7URtCA",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "You are the Master AI Orchestrator for Sir Nassar's company ecosystem. Your absolute priority is to analyze the incoming supervisor/manager commands from Telegram and instantly route the query to the correct specialized sub-agent tool connected below you.\n\nBased on the blueprint in image_e86cb8.png, evaluate the intent and use the exact tool name required:\n\n1. EXECUTIVE SECRETARY SUB-AGENT (Tool Name: \"Handel My mettings\")\n- Route to this tool IMMEDIATELY if Sir Nassar asks to book, schedule, change, or create a business meeting/appointment.\n- Protocol Information: This sub-agent acts as a strict personal secretary. It is responsible for checking calendar conflicts first. It strictly enforces gathering exactly 6 vital information pieces (Date & Time, Subject, Duration, Online/Offline format, Location, and Employee Name) before official creation. It then sends dual confirmation emails via Gmail to Sir Nassar and the respective employee.\n\n2. GOOGLE SHEETS SUB-AGENT (Tool Name: \"AI Agent Tool (Google shetts )\")\n- Route to this tool if the request involves corporate data management inside spreadsheets, such as reading, checking, counting, or appending rows for employees (frontend devs, media buyers, locations, etc.) or projects (pricing, technology, delivery logs, ratings).\n\n3. GMAIL COMMUNICATIONS SUB-AGENT (Tool Name: \"emails\")\n- Route to this tool if the request explicitly asks to check the inbox, read corporate emails, or send dedicated email updates to employees or the owner outside of the scheduling routine.\n\n4. WEB SEARCH & TOOLS SUB-AGENT (Tool Name: \"Search and calender\")\n- Route to this tool if the request requires general internet search updates via \"Google search\", application store research via \"Google_play search\", or generic calendar reminders.\n\nRouting Guidelines:\n- Do not attempt to process or fulfill these specialized backend workflows yourself. Your sole job is to pass the prompt seamlessly to the correct sub-agent.\n- Address Ziad Nassar with the title \"Sir Nassar\" in your status updates.\n- Keep the system flowing flawlessly by making instant, accurate routing decisions."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1168,
+        -480
+      ],
+      "id": "6e554d57-bb39-4905-87b0-4ecf62d03e87",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:3b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -1392,
+        -192
+      ],
+      "id": "b50e5006-47b3-4559-8824-548dd066dff2",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "gjFRQLOqRu6k3Fz8",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 22
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -1232,
+        -192
+      ],
+      "id": "21a42319-aed8-42c6-a271-433349f42650",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $items(\"AI Agent\")[0].json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        -480
+      ],
+      "id": "7fcbd423-1b56-435d-9686-d7505fca4f99",
+      "name": "Send a text message",
+      "webhookId": "aaf133d2-de66-42d2-b638-3c1d8da6c4ec",
+      "credentials": {
+        "telegramApi": {
+          "id": "ram03ZMENj7URtCA",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:3b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -1168,
+        288
+      ],
+      "id": "6c404ffc-df9d-4e57-a8eb-4538fe0007ae",
+      "name": "Ollama Chat Model1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "gjFRQLOqRu6k3Fz8",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1io0rI6L9ppirF4eD1SjBQpjRh2i7loJMU4-jwAzaIy4",
+          "mode": "list",
+          "cachedResultName": "Projects",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1io0rI6L9ppirF4eD1SjBQpjRh2i7loJMU4-jwAzaIy4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "الورقة1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1io0rI6L9ppirF4eD1SjBQpjRh2i7loJMU4-jwAzaIy4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Assigned Employees": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Assigned_Employees', ``, 'string') }}",
+            "Rating (out of 5)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Rating__out_of_5_', ``, 'string') }}",
+            "Price ($)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Price____', ``, 'string') }}",
+            "Delivery Date": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Delivery_Date', ``, 'string') }}",
+            "Tools & Technologies": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Tools___Technologies', ``, 'string') }}",
+            "Platform / Environment": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Platform___Environment', ``, 'string') }}",
+            "Description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Project Name",
+              "displayName": "Project Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Platform / Environment",
+              "displayName": "Platform / Environment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tools & Technologies",
+              "displayName": "Tools & Technologies",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Delivery Date",
+              "displayName": "Delivery Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Price ($)",
+              "displayName": "Price ($)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Rating (out of 5)",
+              "displayName": "Rating (out of 5)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Assigned Employees",
+              "displayName": "Assigned Employees",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -752,
+        144
+      ],
+      "id": "64e3e888-03b6-46e1-9d40-aec5f03ac0d5",
+      "name": "Append row (Projects)",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Nm7ogPlDpKk8Q9Xw",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1io0rI6L9ppirF4eD1SjBQpjRh2i7loJMU4-jwAzaIy4",
+          "mode": "list",
+          "cachedResultName": "Projects",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1io0rI6L9ppirF4eD1SjBQpjRh2i7loJMU4-jwAzaIy4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "الورقة1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1io0rI6L9ppirF4eD1SjBQpjRh2i7loJMU4-jwAzaIy4/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -896,
+        224
+      ],
+      "id": "0b470f73-1ca5-4cdc-8e5b-d559dc55bc9b",
+      "name": "Get row(s) Projects",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Nm7ogPlDpKk8Q9Xw",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1103MU5_nRS6Kfc3kiViWtCUYHR_XEW-AzWPtPbNYmPc",
+          "mode": "list",
+          "cachedResultName": "Ai_smart_A",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1103MU5_nRS6Kfc3kiViWtCUYHR_XEW-AzWPtPbNYmPc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "الورقة1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1103MU5_nRS6Kfc3kiViWtCUYHR_XEW-AzWPtPbNYmPc/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -976,
+        400
+      ],
+      "id": "c624a4ac-df3e-44b8-9d09-1dfd9ed3e5ac",
+      "name": "Get row(s) Employees",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Nm7ogPlDpKk8Q9Xw",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1103MU5_nRS6Kfc3kiViWtCUYHR_XEW-AzWPtPbNYmPc",
+          "mode": "list",
+          "cachedResultName": "Ai_smart_A",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1103MU5_nRS6Kfc3kiViWtCUYHR_XEW-AzWPtPbNYmPc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "الورقة1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1103MU5_nRS6Kfc3kiViWtCUYHR_XEW-AzWPtPbNYmPc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Full Name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Full_Name', ``, 'string') }}",
+            "Phone Number": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Phone_Number', ``, 'string') }}",
+            "Email Address": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email_Address', ``, 'string') }}",
+            "Age": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Age', ``, 'string') }}",
+            "Position": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Position', ``, 'string') }}",
+            "Location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone Number",
+              "displayName": "Phone Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Address",
+              "displayName": "Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Age",
+              "displayName": "Age",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Position",
+              "displayName": "Position",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Location",
+              "displayName": "Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -1040,
+        176
+      ],
+      "id": "ebddeae9-1dfa-4754-93ba-dd6e93ff547e",
+      "name": "Append row Employees",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Nm7ogPlDpKk8Q9Xw",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:3b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        16
+      ],
+      "id": "62a05f1d-a319-4423-aa03-079ddffa09b5",
+      "name": "Ollama Chat Model2",
+      "credentials": {
+        "ollamaApi": {
+          "id": "gjFRQLOqRu6k3Fz8",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "You are an expert HR and Project Operations Assistant responsible for managing company data across two Google Sheets. You must call the exact tool corresponding to the supervisor's request:\n\n1. EMPLOYEES DATA (Use when requests mention staff, team members, frontend/media buyers, or positions):\n- Strict 6-column structure: Full Name | Phone Number | Email Address | Age | Position | Location\n- To read or view data: Call the tool named \"Get row(s) Employees\".\n- To add or insert a new member: Call the tool named \"Append row Employees\" with the parsed details.\n\n2. PROJECTS DATA (Use when requests mention tools, apps, websites, desktop applications, backend projects, C++, pricing/sales, or ratings):\n- Strict 8-column structure: Project Name | Description | Platform / Environment | Tools & Technologies | Delivery Date | Price ($) | Rating (out of 5) | Assigned Employees\n- To read or view data: Call the tool named \"Get row(s) Projects\".\n- To add or insert a new project: Call the tool named \"Append row (Projects)\" with the parsed details.\n\nOperational Instructions:\n- Match the intent of the prompt immediately to the correct tool name listed above.\n- Ensure all inserted values are neatly formatted based on the specified columns.\n- Confirm execution success directly to the supervisor after calling the tool."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        -1072,
+        -48
+      ],
+      "id": "f1fba494-a0b6-4e65-a3e1-93697b10a1a8",
+      "name": "AI Agent Tool (Google shetts )"
+    },
+    {
+      "parameters": {
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "You are an expert Email Operations Assistant responsible for managing corporate communications via Gmail. You must intelligently decide which tool to call based on the supervisor's request:\n\n1. SEND TO EMPLOYEES (Use when requests mention emailing the team, sending updates to staff, or notifying employees):\n- Call the tool named \"Send To Employess\" to draft and send the message.\n\n2. SEND TO OWNER (Use when requests mention emailing the boss, sending reports to the owner, or notifying management):\n- Call the tool named \"Send To owner\" to draft and send the message.\n\n3. READ / FETCH EMAILS (Use when requests ask to check, read, view, or fetch incoming emails/messages):\n- Call the tool named \"Get many messages\" to retrieve the required data.\n\nOperational Instructions:\n- Always analyze the intent of the prompt to distinguish between sending to staff vs. management, or simply fetching emails.\n- Format all email bodies professionally and clearly before executing the tool.\n- Confirm execution success directly to the supervisor after calling the appropriate tool."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        -368,
+        -176
+      ],
+      "id": "48fe4bf8-5973-40f6-a130-3391236e3bd1",
+      "name": "emails"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        -384,
+        112
+      ],
+      "id": "2f689d58-43e6-4c27-a0da-01c1a3668e69",
+      "name": "Send To Employess",
+      "webhookId": "1e95c2ac-803c-43bc-988f-ff1c04bfa89f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tyJtRqgefzevubBr",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "ziadnasar6@gmail.com",
+        "subject": "Sir Nassar ",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        -16,
+        176
+      ],
+      "id": "30c32455-316c-4519-aee2-d4b4015968cf",
+      "name": "Send To owner",
+      "webhookId": "c4493783-4c2b-414a-b449-44bf5d0c241b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tyJtRqgefzevubBr",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        -224,
+        144
+      ],
+      "id": "dcd64899-0e07-489a-b821-a0fbc37db869",
+      "name": "Get many messages",
+      "webhookId": "f48f0b8b-c9bb-4569-b2b5-ff21db9dfdca",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tyJtRqgefzevubBr",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:3b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        160,
+        32
+      ],
+      "id": "67729d99-f946-4c4c-922b-86b402524fc1",
+      "name": "Ollama Chat Model3",
+      "credentials": {
+        "ollamaApi": {
+          "id": "gjFRQLOqRu6k3Fz8",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "ziadnasar6@gmail.com",
+          "mode": "list",
+          "cachedResultName": "ziadnasar6@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "useDefaultReminders": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Use_Default_Reminders', ``, 'boolean') }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ $json.employee_email }}"
+          ],
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        448,
+        160
+      ],
+      "id": "d16f69bc-e81d-4dca-b823-4284528a883c",
+      "name": "Create an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "jX9aDTYIRaJ925jb",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "google_play",
+        "q": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Query__q_', ``, 'string') }}",
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApiTool",
+      "typeVersion": 1,
+      "position": [
+        624,
+        80
+      ],
+      "id": "69d92167-4b18-4a3a-b911-264c6bff2c35",
+      "name": "Google_play search",
+      "credentials": {
+        "serpApi": {
+          "id": "HafCR0mRQc6z0wD6",
+          "name": "SerpApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "q": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Query__q_', ``, 'string') }}",
+        "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location__location_', ``, 'string') }}",
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApiTool",
+      "typeVersion": 1,
+      "position": [
+        256,
+        240
+      ],
+      "id": "69cd15c9-b7e4-46c0-bd6d-1d850b73511f",
+      "name": "Google search",
+      "credentials": {
+        "serpApi": {
+          "id": "HafCR0mRQc6z0wD6",
+          "name": "SerpApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "You are a strict Executive Calendar Assistant. Your primary job is to manage appointments intelligently and prevent scheduling conflicts.\n\nWhen a supervisor wants to book a meeting, you MUST follow this workflow before creating any event:\n\n1. CHECK FOR CONFLICTS:\n- First, check if there is an existing meeting for the requested day/time (use your calendar lookups or memory context).\n- If there is already a meeting at that time, politely REFUSE and inform the supervisor: \"Sorry, you already have a meeting scheduled at this time.\"\n\n2. GATHER REQUIRED DETAILS:\n- If the time is free, you must ensure you have all 5 of these required details. If ANY detail is missing, politely ask the supervisor to provide it before proceeding:\n  A. Person (Who is the meeting with?)\n  B. Date & Time (When does it start?)\n  C. Duration (How long will it take to finish?)\n  D. Meeting Type (Is it Online or Offline?)\n  E. Location (Where is it? If Online, ask for the link/platform like Zoom/Google Meet. If Offline, ask for the physical address/office).\n\n3. EXECUTE CREATION:\n- Once all 5 details are complete and verified with no conflicts, call the tool \"Create an event in Google Calendar\" to officially book it.\n- Format the event title as: [Person Name] - [Online/Offline Meeting]\n- Put the duration and location into their respective fields in the tool.\n\n4. OTHER TOOLS:\n- For general lookups or app store questions, use \"Google search\" or \"Google_play search\".\n\nAlways respond professionally, protect the schedule from double-booking, and confirm once the meeting is successfully created!"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        416,
+        -208
+      ],
+      "id": "79b21203-fc86-4736-acd0-53bd3934af3c",
+      "name": "Search and calender"
+    },
+    {
+      "parameters": {
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "You are the Strict Executive Calendar Secretary for Sir Nassar. You are strictly forbidden from guessing, hallucinating, or triggering any email or calendar creation tool until all verification steps are fully satisfied.\n\nFollow this absolute checklist for every single booking request:\n\n1. THE 6 MANDATORY INFORMATION PIECES:\nYou must ask for and collect exactly these 6 details. If ANY detail is missing, freeze the flow and ask Sir Nassar for it:\n- [1] Precise Date & Time (Day, Month, and Hour).\n- [2] Meeting Subject (What is the purpose?).\n- [3] Duration (How many hours?).\n- [4] Format (Must explicitly be \"Online\" or \"Offline\").\n- [5] Location (If Offline: Physical address. If Online: Meeting link or platform).\n- [6] Employee Full Triple Name .\n\n2. STRICT CALENDAR CONFLICT CHECK:\n- Before scheduling, check the requested day and hour.\n- If there is a pre-existing appointment, you MUST immediately halt and say: \"Sorry Sir Nassar, you already have a meeting scheduled with [Existing Person] at this time. Please choose another slot.\"\n\n3. EMPLOYEE EMAIL LOOKUP PROTOCOL:\n- To get the employee's email, you MUST use the \"Get row(s) in sheet in Google Sheets\" tool to search using their Full Triple Name.\n- If the name is not found in the sheet or contains ambiguity, do NOT guess the email. You must ask Sir Nassar directly: \"Sir Nassar, I couldn't fetch the email for [Employee Name] from the sheets. Please provide their email address.\"\n\n4. CONDITIONAL EXECUTION & EMAIL NOTIFICATION:\n- ONLY when all 6 pieces are fully locked, no calendar conflict exists, and the employee email is validated, execute the tools in this exact order:\n  1. Call \"Create an event in Google Calendar1\".\n  2. Call \"Send a message to owner\" to send the full meeting breakdown to Sir Nassar.\n  3. Call \"Send a message employee\" to send the exact same breakdown to the employee's verified email.\n\nDo not trigger any tool prematurely. Always maintain a highly professional, assistant-like tone, addressing Ziad Nassar as \"Sir Nassar\"."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        -1808,
+        -48
+      ],
+      "id": "48fb0f0a-3a60-4370-922e-e8f7fc255a89",
+      "name": "Handel My mettings"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:3b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -2048,
+        240
+      ],
+      "id": "a2bf85e4-b36a-406d-96e1-5caee3857b7f",
+      "name": "Ollama Chat Model4",
+      "credentials": {
+        "ollamaApi": {
+          "id": "gjFRQLOqRu6k3Fz8",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1103MU5_nRS6Kfc3kiViWtCUYHR_XEW-AzWPtPbNYmPc",
+          "mode": "list",
+          "cachedResultName": "Ai_smart_A",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1103MU5_nRS6Kfc3kiViWtCUYHR_XEW-AzWPtPbNYmPc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "الورقة1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1103MU5_nRS6Kfc3kiViWtCUYHR_XEW-AzWPtPbNYmPc/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -1888,
+        288
+      ],
+      "id": "8554652b-5a71-4af1-a255-a924d6982640",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Nm7ogPlDpKk8Q9Xw",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "ziadnasar6@gmail.com",
+          "mode": "list",
+          "cachedResultName": "ziadnasar6@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -1424,
+        144
+      ],
+      "id": "27b25449-dea6-436b-b3e0-0cf4861c62b7",
+      "name": "Create an event in Google Calendar1",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "jX9aDTYIRaJ925jb",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        -1680,
+        320
+      ],
+      "id": "b47b02aa-454d-4a34-9d41-70efc9a0d760",
+      "name": "Send a message employee",
+      "webhookId": "b75ca489-bd0d-40aa-a2b5-69b9d6a1dc42",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tyJtRqgefzevubBr",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "ziadnasar6@gmail.com",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        -1520,
+        272
+      ],
+      "id": "b2548eec-b30f-4a2a-a374-5736df1c1c4d",
+      "name": "Send a message to owner",
+      "webhookId": "c65c8305-678c-45a4-a79f-b656aca8e2ce",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tyJtRqgefzevubBr",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Tool (Google shetts )",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row (Projects)": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Tool (Google shetts )",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) Projects": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Tool (Google shetts )",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) Employees": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Tool (Google shetts )",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row Employees": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Tool (Google shetts )",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "emails",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent Tool (Google shetts )": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "emails": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send To Employess": {
+      "ai_tool": [
+        [
+          {
+            "node": "emails",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send To owner": {
+      "ai_tool": [
+        [
+          {
+            "node": "emails",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages": {
+      "ai_tool": [
+        [
+          {
+            "node": "emails",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Search and calender",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "Search and calender",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google_play search": {
+      "ai_tool": [
+        [
+          {
+            "node": "Search and calender",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google search": {
+      "ai_tool": [
+        [
+          {
+            "node": "Search and calender",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search and calender": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handel My mettings": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Handel My mettings",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "Handel My mettings",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event in Google Calendar1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Handel My mettings",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message employee": {
+      "ai_tool": [
+        [
+          {
+            "node": "Handel My mettings",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message to owner": {
+      "ai_tool": [
+        [
+          {
+            "node": "Handel My mettings",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "4e73b4e3-7a01-4f51-852c-43fbb30ff9fc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1683654809315c19d0a840f8124382572658b780e6471abee7e4b55976cd39e6"
+  },
+  "nodeGroups": [],
+  "id": "Q9LVMXW2jDpoBWaa",
+  "tags": []
+}
