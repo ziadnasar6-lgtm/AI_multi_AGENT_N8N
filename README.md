@@ -10,6 +10,8 @@ A powerful, production-ready Multi-Agent Automation System built entirely on **n
 
 ---
 
+![Demo](https://github.com/ziadnasar6-lgtm/AI_multi_AGENT_N8N/blob/main/fotos/AI_SMART_Assistant-n8n-ezgif.com-video-to-gif-converter%20(1).gif)
+
 ## 🌟 Key Features
 
 ### 1. 🧠 Central Orchestrator Agent
