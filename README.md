@@ -5,7 +5,7 @@
 
 A powerful, production-ready Multi-Agent Automation System built entirely on **n8n**. Powered by local open-source LLMs via **Ollama**, this system leverages a main Orchestrator AI Agent connected to a network of specialized sub-agents and tools to seamlessly manage emails, corporate Google Sheets, calendars, and live web searches from a single Telegram interface. 🚀
 
-> ### 📝 Repository Description (سطرين للوصف الخارجي)
+> ### 📝 Repository Description   
 > A self-hosted multi-agent n8n workflow powered by Ollama that orchestrates specialized sub-agents to handle automated meetings, Google Sheets operations, email communications, and live web exploration via Telegram.
 
 ---
